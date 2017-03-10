@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block body %}
+    {% if request.user.is_authenticated %}
+      <div class="row content">
+        <div class="container profile_info text-left white-bg">
+        <p>Logged in as:
+          <a href="{% url 'profile_self' %}">{{ request.user }}</a>
+        </p>
+          <h1>The Code Fellows Network</h1>
+          <p>Welcome to The Code Fellows Network, the  professional networking site exclusively built for Code Fellows students and alumni.</p>
+          {% if feed_posts|length > 0 %}
+          {# -------- FEED SECTION -------- #}
+          <h3>Latest Updates</h3>
+          <h4>From Your Network:</h4>
+            <div class="container text-center post_section scrollable_feed">
+              <div class="row">
+                {% for post in feed_posts %}
+                  <div class="row post_row">
+                    <div class="col-sm-12 post_list">
+                      <h3>
+                        <a href="{% url 'post' post.id %}">{{ post.title }}</a>
+                      </h3>
+                      <h6>Uploaded by: 
+                      <a href="{% url 'profile_other' post.author.username %}">
+                        {{ post.author }}</a>
+                      </h6>
+                      <p>
+                        {{ post.category }} uploaded {{ post.date_modified }}
+                      </p>
+                      {% if post.url %}
+                        <p>
+                          External Link:
+                            <a href="{{ post.url }}"target="_blank">
+                              {{ post.url }}
+                            </a>
+                        </p>
+                      {% endif %}
+                      {% if post.content|length > 255 %}
+                          <p class='feed_content'>{{ post.content|slice:":255" }}... <a href="{% url 'post' post.id %}"> continue</a></p>
+                      {% else %}    
+                          <p class='feed_content'>{{ post.content }}</p>
+                      {% endif %}
+                      <p>
+                        <a href="{% url 'post' post.id %}">
+                          Comments: ({{ post.comments.all|length }})
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div><hr>
+          {% endif %}
+          {# ------------ SITE MAP -------------- #}
+          <h5>Site Map: </h5>
+          <ul>
+            <a href="{% url 'profile_self' %}"><li>Visit Your Profile Page</li></a>
+            <a href="{% url 'new_post' %}"><li>Add a New Post</li></a>
+            <a href="{% url 'find_users' %}"><li>Browse Other Users</li></a>
+            <a href="{% url 'posts' %}"><li>Browse Posts</li></a>
+          </ul>
+          <hr>
+        </div>
+        {# ---------- LOGIN SECTION ---------- #}
+      {% else %}
+        <div class="row content">
+          <div class="container handshake">
+            <div class="login-box">
+              <h3 class="white">Welcome to the Code Fellows Network</h3>
+              <ul class="list-group">
+                <li class="list-group-item">Follow your fellow Code Fellows!</li>
+                <li class="list-group-item">Post links to your deployed sites!</li>
+                <li class="list-group-item">Share resources that helped you!</li>
+              </ul>
+              <a href="{% url 'social:begin' 'github' %}"><button class="btn btn-lg btn-danger" type="submit">&#60; Log In / Register via Github! /&#62;</button></a>
+              <p></p>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+  {% endblock %}

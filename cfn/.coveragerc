@@ -1,0 +1,21 @@
+[run]
+source =
+    cfn
+    profile_cfn
+    posts
+
+omit =
+    */migrations/*
+    */tests.py
+    manage.py
+    cfn/wsgi.py
+    */apps.py
+    */wsgi.py
+    */settings.py
+
+[report]
+show_missing = True
+
+exclude_lines =
+    def make_user_profile
+    def github_api_call
